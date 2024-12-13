@@ -186,7 +186,7 @@
 
         <LinearLayout
             android:id="@+id/btnFacebook"
-            android:layout_width="130dp"
+            android:layout_width="133dp"
             android:layout_height="50dp"
             android:background="@drawable/social_btn_background"
             android:orientation="horizontal">

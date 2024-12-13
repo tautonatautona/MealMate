@@ -2,7 +2,6 @@ package com.example.mealmate.Fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
@@ -22,26 +21,22 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.example.mealmate.DataClass;
+import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
+import java.util.List;
 
 public class addRecipeFragment extends Fragment {
 
     ImageView uploadImage;
     Button saveButton;
-    EditText uploadTopic, uploadDesc;
+    EditText uploadRecipe, uploadDescription,uploadIngredients;
     String imageURL;
     Uri uri;
 
@@ -52,8 +47,9 @@ public class addRecipeFragment extends Fragment {
 
         // Initialize UI components
         uploadImage = view.findViewById(R.id.uploadImage);
-        uploadDesc = view.findViewById(R.id.uploadDesc);
-        uploadTopic = view.findViewById(R.id.uploadTopic);
+        uploadDescription = view.findViewById(R.id.uploadDesc);
+        uploadRecipe = view.findViewById(R.id.uploadRecipe);
+        uploadIngredients = view.findViewById(R.id.uploadIngredients);
         saveButton = view.findViewById(R.id.saveButton);
 
         // Set up ActivityResultLauncher for image selection
@@ -98,10 +94,11 @@ public class addRecipeFragment extends Fragment {
     // Save data to Firebase Storage and Database
     public void saveData() {
         if (uri != null) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("mealmate_recipes")
-                    .child(Objects.requireNonNull(uri.getLastPathSegment()));
+            // Reference to Firebase Storage
+            StorageReference storageReference = FirebaseStorage.getInstance()
+                    .getReference("mealmate_recipes/" + uri.getLastPathSegment());
 
-            // Create a progress dialog
+            // Create and show progress dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setCancelable(false);
             builder.setView(R.layout.progress_layout);
@@ -109,55 +106,119 @@ public class addRecipeFragment extends Fragment {
             dialog.show();
 
             // Upload image to Firebase Storage
-            storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uriTask.isComplete());
-                    Uri urlImage = uriTask.getResult();
-                    imageURL = urlImage.toString();
-                    uploadData();  // Call method to upload data to Firebase Database
-                    dialog.dismiss();  // Dismiss the dialog after the process
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    dialog.dismiss();
-                    Toast.makeText(getContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+            storageReference.putFile(uri).addOnSuccessListener(taskSnapshot ->
+                    // Get the download URL
+                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(uriTask -> {
+                        if (uriTask.isSuccessful()) {
+                            Uri urlImage = uriTask.getResult();
+                            if (urlImage != null) {
+                                imageURL = urlImage.toString();
+                                uploadData(); // Call method to upload data to Firebase Database
+                            }
+                            dialog.dismiss(); // Dismiss progress dialog
+                        } else {
+                            dialog.dismiss();
+                            Toast.makeText(getContext(), "Failed to get image URL: " + uriTask.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+            ).addOnFailureListener(e -> {
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
         } else {
             Toast.makeText(getContext(), "Please select an image first", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Upload the data to Firebase Database
     public void uploadData() {
-        String title = uploadTopic.getText().toString();
-        String desc = uploadDesc.getText().toString();
+        String title = uploadRecipe.getText().toString().trim();
+        String desc = uploadDescription.getText().toString().trim();
+        String ingredientsInput = uploadIngredients.getText().toString().trim();
 
-        // Check if fields are not empty
-        if (!title.isEmpty() && !desc.isEmpty() && imageURL != null) {
-            DataClass dataClass = new DataClass(title, desc, imageURL);
+        if (title.isEmpty() || desc.isEmpty() || ingredientsInput.isEmpty()) {
+            Toast.makeText(getActivity(), "Please provide all required fields.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Parse ingredients
+        List<Recipe.InstructionIngredient> ingredients = new ArrayList<>();
+        String[] ingredientArray = ingredientsInput.split(";"); // Assuming ';'-separated ingredients
+        for (String item : ingredientArray) {
+            String[] details = item.split(","); // Assuming ',' separates fields
+            if (details.length >= 4) {
+                int id = ingredients.size() + 1; // Example logic for unique ID
+                String name = details[0].trim();
+                String localizedName = details[1].trim();
+                String image = details[2].trim();
+
+                Recipe.InstructionIngredient ingredient = new Recipe.InstructionIngredient(id, name, localizedName, image);
+                ingredients.add(ingredient);
+            }
+        }
+
+        // Create RecipeInstruction
+        Recipe.RecipeInstruction instruction = new Recipe.RecipeInstruction(1, "Example step", ingredients, new ArrayList<>(), null);
+        List<Recipe.RecipeInstruction> instructions = new ArrayList<>();
+        instructions.add(instruction);
+
+        // Create Recipe object
+        String key = FirebaseDatabase.getInstance().getReference("mealmate_recipes").push().getKey();
+        if (key != null) {
+            Recipe recipe = new Recipe(null,title, "", desc, key, ingredients,null, null);
+
+            FirebaseDatabase.getInstance().getReference("mealmate_recipes").child(key).setValue(recipe)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Recipe added successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "Failed to add recipe.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getActivity(), "Failed to generate a recipe key.", Toast.LENGTH_SHORT).show();
+        }
+
+
+        if (!title.isEmpty() && !desc.isEmpty() && !ingredients.isEmpty() && imageURL != null) {
+            Recipe recipe = new Recipe(null, title, imageURL, desc, null, ingredients,null, null);
             String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
-            // Upload the data to Firebase Database
             FirebaseDatabase.getInstance().getReference("mealmate_recipes").child(currentDate)
-                    .setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getContext(), "Recipe added successfully", Toast.LENGTH_SHORT).show();
-                            }
+                    .setValue(recipe)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Recipe added successfully", Toast.LENGTH_SHORT).show();
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Failed to add recipe: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getActivity(), "Failed to add recipe: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         } else {
-            Toast.makeText(getContext(), "Please fill all fields and upload an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please fill all fields and upload an image", Toast.LENGTH_SHORT).show();
+        }
+
+
+    // Validate inputs
+        if (!title.isEmpty() && !desc.isEmpty() && !ingredients.isEmpty() && imageURL != null) {
+            Recipe recipe = new Recipe(null, title, imageURL, desc, null, ingredients, ingredientsInput,null);
+            String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+
+            // Upload to Firebase
+            FirebaseDatabase.getInstance().getReference("mealmate_recipes").child(currentDate)
+                    .setValue(recipe)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Recipe added successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getActivity(), "Failed to add recipe: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(getActivity(), "Please fill all fields and upload an image", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

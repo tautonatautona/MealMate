@@ -1,64 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/white"
     tools:context=".Fragments.addRecipeFragment">
 
-    <!-- ImageView for uploading an image -->
-    <ImageView
-        android:id="@+id/uploadImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_background"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/image_background" />
-
-    <!-- EditText for entering recipe title -->
-    <EditText
-        android:id="@+id/uploadTopic"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Recipe Title"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp"
+        >
 
-    <!-- EditText for entering recipe description -->
-    <EditText
-        android:id="@+id/uploadDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Recipe Description"
-        android:background="@drawable/rounded_edittext"
-        android:padding="12dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        android:gravity="top"
-        android:minLines="4"
-        android:maxLines="6"
-        android:scrollbars="vertical" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:background="@drawable/lavender_border"
+            >
 
-    <!-- Button for saving the recipe -->
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Recipe"
-        android:backgroundTint="@color/primaryColor"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:padding="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_gravity="center" />
+            <ImageView
+                android:src="@drawable/uploadimg"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/uploadImage"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription" />
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/uploadRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:autofillHints=""
+                android:background="@drawable/lavender_border"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                android:padding="16dp"
+                android:hint="@string/enter_recipe_name"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/lavender"
+                />
+
+            <EditText
+                android:id="@+id/uploadDesc"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:autofillHints=""
+                android:background="@drawable/lavender_border"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                android:padding="16dp"
+                android:hint="@string/enter_recipe_description"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/lavender"
+                />
+
+            <EditText
+                android:id="@+id/uploadIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:autofillHints=""
+                android:background="@drawable/lavender_border"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                android:padding="16dp"
+                android:hint="@string/enter_recipe_description"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/lavender"
+                />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/save"
+                android:textSize="18sp"
+                android:layout_marginTop="20dp"
+                app:cornerRadius = "20dp"
+                />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>

@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,18 +22,23 @@ import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
 import com.example.mealmate.adapter.RecipeAdapter;
 import com.example.mealmate.BuildConfig;
+import com.example.mealmate.adapter.RecipePagerAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomePageFragment extends Fragment {
 
     private RecyclerView horizontalRecyclerView;
+    private FloatingActionButton fab;
     private RecipeAdapter recipeAdapter;
+    private RecipePagerAdapter recipePagerAdapter;
     private final List<Recipe> recipes = new ArrayList<>();
     private final Handler handler = new Handler();
     private Runnable autoScroll;
@@ -40,43 +47,82 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
-        // Initialize RecyclerViews
+        // Initialize views
         horizontalRecyclerView = view.findViewById(R.id.featuredRecyclerView);
         horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
         RecyclerView verticalRecyclerView = view.findViewById(R.id.recyclerView);
         verticalRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
-        // Initialize adapter
+        // Initialize adapters
         recipeAdapter = new RecipeAdapter(requireContext(), recipes);
+        recipePagerAdapter = new RecipePagerAdapter(requireContext(), recipes);
         horizontalRecyclerView.setAdapter(recipeAdapter);
-        verticalRecyclerView.setAdapter(recipeAdapter);
+        verticalRecyclerView.setAdapter(recipePagerAdapter);
 
-        // Fetch random recipes and start auto-scroll
-        fetchRandomRecipes();
+        // Initialize FAB
+        fab = view.findViewById(R.id.fab);
+
+        // Set up progress bar
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);  // Show loading indicator
+
+        // Fetch random recipes
+        fetchRandomRecipes(progressBar);
+
+        // Set up auto-scroll for horizontal RecyclerView
         setupAutoScroll();
+
+        // FAB click listener
+        fab.setOnClickListener(view1 -> {
+            Fragment addmyRecipe = getParentFragmentManager().findFragmentByTag("AddRecipeFragment");
+            if (addmyRecipe == null) {
+                addmyRecipe = new addRecipeFragment();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, addmyRecipe, "AddRecipeFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         return view;
     }
 
-    private void fetchRandomRecipes() {
+    private void fetchRandomRecipes(ProgressBar progressBar) {
         String url = "https://api.spoonacular.com/recipes/random?number=20&apiKey=" + BuildConfig.SPOONACULAR_API_KEY;
         RequestQueue queue = Volley.newRequestQueue(requireContext());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        recipes.clear();  // Clear list before adding new items
+
+                        recipes.clear(); // Clear the list before adding new recipes
                         JSONArray recipesArray = response.getJSONArray("recipes");
 
                         for (int i = 0; i < recipesArray.length(); i++) {
-                            JSONObject recipe = recipesArray.getJSONObject(i);
-                            String title = recipe.getString("title");
-                            String imageUrl = recipe.getString("image");
 
-                            recipes.add(new Recipe(title, imageUrl));
+                            JSONObject recipe = recipesArray.getJSONObject(i);
+                            String title = recipe.optString("title", "Untitled Recipe");
+                            String imageUrl = recipe.optString("image", "");
+
+                            JSONArray ingredientsArray = recipe.getJSONArray("extendedIngredients");
+
+                            List<Recipe.InstructionIngredient> ingredients = new ArrayList<>();
+                            for (int j = 0; j < ingredientsArray.length(); j++) {
+                                JSONObject ingredient = ingredientsArray.getJSONObject(j);
+                                int id = ingredient.getInt("id");
+                                String name = ingredient.getString("name");
+                                String image = ingredient.getString("image");
+
+                                ingredients.add(new Recipe.InstructionIngredient(id, name, name, image));
+                            }
+
+                            recipes.add(new Recipe(null, title, imageUrl, null, null, ingredients, null, null));
                         }
+
                         recipeAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE); // Hide progress bar after data is loaded
+
                     } catch (JSONException e) {
                         Log.e("Recipe_error", "Error parsing JSON: " + e.getMessage());
                         if (getContext() != null) {
@@ -88,6 +134,7 @@ public class HomePageFragment extends Fragment {
                     if (getContext() != null) {
                         Toast.makeText(getContext(), "Failed to fetch recipes", Toast.LENGTH_SHORT).show();
                     }
+                    progressBar.setVisibility(View.GONE); // Hide progress bar on error
                 });
 
         queue.add(jsonObjectRequest);

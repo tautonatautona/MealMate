@@ -12,10 +12,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        app:cardCornerRadius="30dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="20dp">
 
         <LinearLayout
@@ -24,15 +24,8 @@
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
-            android:background="@drawable/lavender_border">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Update Data"
-                android:textSize="30sp"
-                android:textAlignment="center"
-                android:textColor="@color/teal"/>
+            android:background="@drawable/lavender_border"
+            >
 
             <ImageView
                 android:layout_width="match_parent"
@@ -40,7 +33,8 @@
                 android:src="@drawable/uploadimg"
                 android:id="@+id/updateImage"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -49,7 +43,7 @@
                 android:background="@drawable/lavender_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter topic name"
+                android:hint="@string/enter_recipe_name"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/teal"/>
 
@@ -60,15 +54,27 @@
                 android:background="@drawable/lavender_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter description"
+                android:hint="@string/enter_recipe_description"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/teal"/>
+                android:textColor="@color/teal"
+                />
+
+            <EditText
+                android:id="@+id/updateIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingredients"
+                android:background="@drawable/lavender_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:textColor="@color/teal"
+                />
 
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Update"
+                android:text="@string/update"
                 android:id="@+id/updateButton"
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"

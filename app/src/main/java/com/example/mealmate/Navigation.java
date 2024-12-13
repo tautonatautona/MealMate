@@ -1,144 +1,158 @@
 package com.example.mealmate;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mealmate.Fragments.HomePageFragment;
-import com.example.mealmate.Fragments.MyAccountFragment;
+import com.example.mealmate.Fragments.GroceryListFragment;
 import com.example.mealmate.Fragments.MyRecipeFragment;
-import com.example.mealmate.Utils.ImageUtils;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Navigation extends AppCompatActivity {
 
-    private Toolbar tb;
+    private static final String FALLBACK_USER_NAME = "Guest";
 
     private TabLayout tabLayout;
+    private Fragment homeFragment, myRecipesFragment, groceryListFragment;
+    private FragmentManager fragmentManager;
+    private final String[] labels = new String[]{"Home", "MyRecipes", "Account"};
 
-    private TextView userName;
-
-    private ViewPager2 viewPager;
-    ViewPagerFragmentAdapter adapter;
-
-    private final String[] labels = new String[] {"Home","MyRecipes","Account"};
-
-
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_navigation);
+        setupWindowInsets();
+
+        // Initialize UI components
+        TextView userName = findViewById(R.id.userName);
+        ImageView profileImage = findViewById(R.id.profileImage);
+
+        setUserName(userName);
+        setUserProfileImage(profileImage);
+
+        init();
+    }
+
+    private void setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.navigation), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // Initialize the UI components
-        userName = findViewById(R.id.userName);
-
-
-        // Get the current logged-in user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (currentUser != null) {
-            // Get the user's display name
-            String displayName = currentUser.getDisplayName();
-
-            // Check if the display name is not null or empty
-            if (displayName != null && !displayName.isEmpty()) {
-                // Set the display name to the TextView
-                userName.setText("Welcome, " + displayName);
-
-            }
-            else {
-                // If no display name, fallback to email or some default text
-                userName.setText("Welcome, " + currentUser.getEmail());
-            }
-        }
-        else {
-            // Handle the case when no user is logged in (if needed)
-            userName.setText("Welcome, Guest");
-        }
-
-        init();
-
-        // Bind and set TabLayout to ViewPager2 and set icons for each tab
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            // Set icons for each tab
-            switch (position) {
-                case 0:
-                    tab.setIcon(R.drawable.ic_home); // Replace with your actual icon resource
-                    break;
-                case 1:
-                    tab.setIcon(R.drawable.ic_recipe); // Replace with your actual icon resource
-                    break;
-                case 2:
-                    tab.setIcon(R.drawable.ic_account); // Replace with your actual icon resource
-                    break;
-            }
-        }).attach();
-
-        viewPager.setCurrentItem(1, false);
     }
 
-    private void init(){
-        tb = findViewById(R.id.ToolBar);
+    private void setUserName(TextView userName) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String displayName = currentUser.getDisplayName();
+            userName.setText(displayName != null && !displayName.isEmpty() ? displayName : currentUser.getEmail());
+        } else {
+            userName.setText(FALLBACK_USER_NAME);
+        }
+    }
+
+    private void setUserProfileImage(ImageView profileImage) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.getPhotoUrl() != null) {
+            String photoUrl = currentUser.getPhotoUrl().toString();
+
+            // Load the profile image using Glide
+            Glide.with(this)
+                    .load(photoUrl)
+                    .placeholder(R.drawable.profile_image) // Placeholder while loading
+                    .error(R.drawable.profile_image)      // Default image on error
+                    .apply(RequestOptions.circleCropTransform())  // Crop image into a circle
+                    .into(profileImage);
+        } else {
+
+            // Set a default image if no profile URL is available
+            profileImage.setImageResource(R.drawable.profile_image);
+        }
+
+    }
+
+    private void init() {
+
+        Toolbar tb = findViewById(R.id.toolBar);
         setSupportActionBar(tb);
 
-        // Initialize TabLayout
         tabLayout = findViewById(R.id.tab_layout);
-        // Initialize ViewPager2
-        viewPager = findViewById(R.id.view_pager);
-        // Create adapter instance
-        adapter = new ViewPagerFragmentAdapter(this);
-        // Set adapter to ViewPager2
-        viewPager.setAdapter(adapter);
+        fragmentManager = getSupportFragmentManager();
 
-        getSupportActionBar().setElevation(0);
+        // Initialize fragments
+        homeFragment = new HomePageFragment();
+        myRecipesFragment = new MyRecipeFragment();
+        groceryListFragment = new GroceryListFragment();
+
+        // Set default fragment
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, homeFragment)
+                .commit();
+
+        // Setup TabLayout and icons
+        setupTabLayout();
+        configureTabIcons();
     }
 
-    private class ViewPagerFragmentAdapter extends FragmentStateAdapter {
+    private void setupTabLayout() {
 
-        public ViewPagerFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
-            super(fragmentActivity);
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            switch (position) {
-                case 0:
-                    return new HomePageFragment();
-                case 1:
-                    return new MyRecipeFragment();
-                case 2:
-                    return new MyAccountFragment();
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switchFragment(tab.getPosition());
             }
-            return new HomePageFragment();
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void configureTabIcons() {
+
+        TabLayout.Tab homeTab = tabLayout.newTab().setIcon(R.drawable.ic_home);
+        TabLayout.Tab recipeTab = tabLayout.newTab().setIcon(R.drawable.ic_recipe);
+        TabLayout.Tab groceryListTab = tabLayout.newTab().setIcon(R.drawable.shopping_basket);
+        //.setText(labels[2]) to set tabName
+
+        tabLayout.addTab(homeTab);
+        tabLayout.addTab(recipeTab);
+        tabLayout.addTab(groceryListTab);
+    }
+
+    private void switchFragment(int position) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        switch (position) {
+            case 0:
+                transaction.replace(R.id.fragment_container, homeFragment);
+                break;
+            case 1:
+                transaction.replace(R.id.fragment_container, myRecipesFragment);
+                break;
+            case 2:
+                transaction.replace(R.id.fragment_container, groceryListFragment);
+                break;
         }
 
-        @Override
-        public int getItemCount() {
-            return labels.length;
-        }
+        transaction.commit();
     }
 }

@@ -1,12 +1,12 @@
 package com.example.mealmate.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView; // Import ImageView
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,9 +14,12 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.example.mealmate.DataClass;
+import com.example.mealmate.BuildConfig;
 import com.example.mealmate.Fragments.RecipeDetailFragment;
+import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
 
 import java.util.ArrayList;
@@ -25,9 +28,9 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
-    private List<DataClass> dataList;
+    private List<Recipe> dataList;
 
-    public MyAdapter(Context context, List<DataClass> dataList) {
+    public MyAdapter(Context context, List<Recipe> dataList) {
         this.context = context;
         this.dataList = dataList != null ? dataList : new ArrayList<>(); // Initialize to empty list if null
     }
@@ -41,7 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        DataClass dataItem = dataList.get(position); // Get the data item
+        Recipe dataItem = dataList.get(position); // Get the data item
 
         // Load the image URL with Glide
         String imageUrl = dataItem.getDataImage();
@@ -59,7 +62,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.recTitle.setText(dataItem.getDataTitle());
         holder.recDesc.setText(dataItem.getDataDesc()); // Set description text
 
-        // Handle card click to navigate to the RecipeDetailFragment
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,15 +71,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 bundle.putString("Description", dataItem.getDataDesc());
                 bundle.putString("Title", dataItem.getDataTitle());
                 bundle.putString("Key", dataItem.getKey());
+
+
+                String url = "https://api.spoonacular.com/recipes/324694/analyzedInstructions" + BuildConfig.SPOONACULAR_API_KEY;
+                RequestQueue queue = Volley.newRequestQueue(context);
+
+                // Null-safe handling for ingredients
+                String ingredients = Recipe.RecipeInstruction.getIngredients() != null
+                        ? Recipe.RecipeInstruction.getIngredients().toString()
+                        : "No ingredients available";
+                bundle.putString("Ingredient", ingredients);
+
                 recipeDetailFragment.setArguments(bundle);
 
                 // Replace the current fragment
                 ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.navigation, recipeDetailFragment)
+                        .replace(R.id.fragment_container, recipeDetailFragment)
                         .addToBackStack(null) // Optional: adds to the back stack
                         .commit();
             }
         });
+
     }
 
     @Override
@@ -85,7 +99,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return dataList.size();
     }
 
-    public void searchDataList(ArrayList<DataClass> searchList) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void searchDataList(ArrayList<Recipe> searchList) {
         dataList = searchList != null ? searchList : new ArrayList<>(); // Prevent null assignment
         notifyDataSetChanged();
     }

@@ -1,22 +1,22 @@
 package com.example.mealmate.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.mealmate.DataClass;
+import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
 import com.example.mealmate.adapter.MyAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,58 +35,58 @@ public class MyRecipeFragment extends Fragment {
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
-    List<DataClass> dataList;
+    List<Recipe> dataList;
     MyAdapter adapter;
     SearchView searchView;
+    ProgressBar progressBar;
+    private final Handler searchHandler = new Handler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_recipe, container, false);
 
+        // Initialize views
         recyclerView = view.findViewById(R.id.recyclerView);
         fab = view.findViewById(R.id.fab);
         searchView = view.findViewById(R.id.search);
+        progressBar = view.findViewById(R.id.progressBar);
+
         searchView.clearFocus();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
+
+        // Set up GridLayoutManager with dynamic columns
+        int numberOfColumns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setCancelable(true);
-        builder.setView(R.layout.progress_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
+        // Set up adapter
         dataList = new ArrayList<>();
         adapter = new MyAdapter(getContext(), dataList);
         recyclerView.setAdapter(adapter);
 
+        // Set up Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("mealmate_recipes");
 
+        // Show ProgressBar
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Firebase event listener to fetch data
         eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                dataList.clear();
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                    DataClass dataClass = itemSnapshot.getValue(DataClass.class);
-                    if (dataClass != null) {
-                        dataClass.setKey(itemSnapshot.getKey());
-                        dataList.add(dataClass);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                dialog.dismiss();
+            public void onDataChange(DataSnapshot snapshot) {
+                updateDataList(snapshot);
+                progressBar.setVisibility(View.GONE); // Hide ProgressBar after data is loaded
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                dialog.dismiss();
+            public void onCancelled(DatabaseError error) {
+                progressBar.setVisibility(View.GONE); // Hide ProgressBar on error
                 Toast.makeText(getContext(), "Error fetching data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Search functionality
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -95,19 +95,22 @@ public class MyRecipeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchList(newText);
+                searchHandler.removeCallbacksAndMessages(null); // Remove pending search callbacks
+                searchHandler.postDelayed(() -> searchList(newText), 300); // Delay search by 300ms
                 return true;
             }
         });
 
+        // FAB click listener to open add recipe fragment
         fab.setOnClickListener(view1 -> {
-            Fragment addmyRecipe = new addRecipeFragment();
-            FragmentManager fragmentManager = getParentFragmentManager(); // Use getParentFragmentManager
+            Fragment addRecipeFragment = new addRecipeFragment();
+            FragmentManager fragmentManager = getParentFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main, addmyRecipe) // Ensure the container ID is correct
+                    .replace(R.id.fragment_container, addRecipeFragment)
                     .addToBackStack(null)
                     .commit();
         });
+
         return view;
     }
 
@@ -119,11 +122,24 @@ public class MyRecipeFragment extends Fragment {
         }
     }
 
+    private void updateDataList(DataSnapshot snapshot) {
+        dataList.clear();
+        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+            Recipe recipe = itemSnapshot.getValue(Recipe.class);
+            if (recipe != null) {
+                recipe.setKey(itemSnapshot.getKey());
+                dataList.add(recipe);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    // Search for recipes by title
     public void searchList(String text) {
-        ArrayList<DataClass> searchList = new ArrayList<>();
-        for (DataClass dataClass : dataList) {
-            if (dataClass.getDataTitle().toLowerCase().contains(text.toLowerCase())) {
-                searchList.add(dataClass);
+        ArrayList<Recipe> searchList = new ArrayList<>();
+        for (Recipe recipe : dataList) {
+            if (recipe.getDataTitle().toLowerCase().contains(text.toLowerCase())) {
+                searchList.add(recipe);
             }
         }
         adapter.searchDataList(searchList);

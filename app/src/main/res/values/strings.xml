@@ -10,4 +10,12 @@
     <string name="facebook_logo_description">Facebook logo</string>
     <string name="google_logo_description">Google logo</string>
     <string name="reset_password_description">Reset password link</string>
+    <string name="enter_recipe_name">Enter recipe name</string>
+    <string name="enter_recipe_description">Enter recipe description</string>
+    <string name="save">Save</string>
+    <string name="upload_data">Upload Data</string>
+    <string name="add_recipe">Add_Recipe</string>
+    <string name="update">Update</string>
+    <string name="add_recipe1">Add Recipe</string>
+    <string name="add_recipe_">Add Recipe</string>
 </resources>
