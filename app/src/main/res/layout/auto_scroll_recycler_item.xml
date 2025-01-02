@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:padding="16dp"
         >
 
@@ -41,21 +41,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textColor="@color/beige"
+            android:textColor="@color/orange"
             android:textSize="20sp"
             android:layout_marginTop="8dp"
-            />
-
-        <TextView
-            android:id="@+id/recDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textColor="@color/beige"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:layout_marginTop="4dp"
             />
 
     </LinearLayout>

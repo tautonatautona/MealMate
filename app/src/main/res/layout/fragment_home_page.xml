@@ -57,7 +57,6 @@
                     android:visibility="gone"
                     android:layout_centerInParent="true"/>
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/featuredRecyclerView"
                     android:layout_width="match_parent"
@@ -84,6 +83,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btnBreakfast"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
@@ -94,6 +94,7 @@
                         />
 
                     <Button
+                        android:id="@+id/btnLunch"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
@@ -104,6 +105,7 @@
                         />
 
                     <Button
+                        android:id="@+id/btnDinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"

@@ -40,23 +40,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:id="@+id/updateTitle"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/edittext_background"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
                 android:hint="@string/enter_recipe_name"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/teal"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:id="@+id/updateDesc"
-                android:background="@drawable/lavender_border"
-                android:layout_marginTop="20dp"
-                android:padding="16dp"
-                android:hint="@string/enter_recipe_description"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/teal"
                 />
 
             <EditText
@@ -64,21 +52,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingredients"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/edittext_background"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:textColor="@color/teal"
                 />
 
-
-            <Button
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="@string/update"
-                android:id="@+id/updateButton"
-                android:textSize="18sp"
+                android:id="@+id/updateInstructions"
+                android:background="@drawable/edittext_background"
                 android:layout_marginTop="20dp"
-                app:cornerRadius = "20dp"/>
+                android:padding="16dp"
+                android:hint="Enter instructions here..."
+                android:gravity="start|center_vertical"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/updateButton"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="@drawable/button_background"
+                android:text="update"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                app:cornerRadius = "40dp"/>
 
         </LinearLayout>
 

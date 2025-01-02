@@ -47,7 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Recipe dataItem = dataList.get(position); // Get the data item
 
         // Load the image URL with Glide
-        String imageUrl = dataItem.getDataImage();
+        String imageUrl = dataItem.getImageURL();
         if (imageUrl != null) {
             Glide.with(context)
                     .load(imageUrl)
@@ -59,8 +59,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         // Set title and description
-        holder.recTitle.setText(dataItem.getDataTitle());
-        holder.recDesc.setText(dataItem.getDataDesc()); // Set description text
+        holder.recTitle.setText(dataItem.getTitle());
+        holder.recDesc.setText(dataItem.getDescription()); // Set description text
 
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,17 +68,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("Image", imageUrl);
-                bundle.putString("Description", dataItem.getDataDesc());
-                bundle.putString("Title", dataItem.getDataTitle());
-                bundle.putString("Key", dataItem.getKey());
-
+                bundle.putString("Description", dataItem.getDescription());
+                bundle.putString("Title", dataItem.getTitle());
+                bundle.putString("Id", String.valueOf(dataItem.getId()));
+                bundle.putString("Instructions", dataItem.getInstructions());
+                bundle.putString("key", dataItem.getKey());
 
                 String url = "https://api.spoonacular.com/recipes/324694/analyzedInstructions" + BuildConfig.SPOONACULAR_API_KEY;
                 RequestQueue queue = Volley.newRequestQueue(context);
 
                 // Null-safe handling for ingredients
-                String ingredients = Recipe.RecipeInstruction.getIngredients() != null
-                        ? Recipe.RecipeInstruction.getIngredients().toString()
+                String ingredients = dataItem.getIngredients() != null // Use dataItem instead of Recipe
+                        ? dataItem.getIngredients().toString()
                         : "No ingredients available";
                 bundle.putString("Ingredient", ingredients);
 
@@ -91,7 +92,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         .commit();
             }
         });
-
     }
 
     @Override

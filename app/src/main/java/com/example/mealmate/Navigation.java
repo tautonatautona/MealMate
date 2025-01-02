@@ -1,8 +1,11 @@
 package com.example.mealmate;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,9 +48,29 @@ public class Navigation extends AppCompatActivity {
 
         setUserName(userName);
         setUserProfileImage(profileImage);
+        
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logOut();
+            }
+        });
 
         init();
     }
+
+    private void logOut() {
+        FirebaseAuth.getInstance().signOut(); // Sign out from Firebase
+        Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+
+        // Redirect to LoginActivity
+        Intent intent = new Intent(Navigation.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+        finish(); // Close the current activity
+    }
+
 
     private void setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.navigation), (v, insets) -> {
@@ -86,6 +109,7 @@ public class Navigation extends AppCompatActivity {
         }
 
     }
+    
 
     private void init() {
 

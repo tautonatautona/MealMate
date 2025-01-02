@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.RecipeDetailFragment">
+    tools:context=".Fragments.SpoonacularRecipeDetailFragment">
 
-    <!-- Top Image Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Recipe Image -->
         <ImageView
             android:id="@+id/detailImage"
             android:layout_width="match_parent"
@@ -19,9 +19,9 @@
             android:src="@drawable/uploadimg"
             android:elevation="4dp"
             android:background="@drawable/rounded_corner_background" />
+
     </LinearLayout>
 
-    <!-- Recipe Details Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +31,6 @@
         android:layout_marginBottom="-22dp"
         android:background="@drawable/rounded_back">
 
-        <!-- Bookmark, Shop, and SMS Options -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,28 +43,22 @@
                 android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:src="@drawable/bookmark_24px"
-                android:contentDescription="Add to Favorites" />
-
-            <ImageView
-                android:id="@+id/addToGroceryList"
-                android:layout_width="40dp"
-                android:layout_height="60dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:src="@drawable/shopping_basket"
-                android:contentDescription="Add to Grocery List" />
+                android:text="Dinner"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/sendSms"
+                android:src="@drawable/send"
                 android:layout_width="40dp"
                 android:layout_height="60dp"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:src="@drawable/send"
-                android:contentDescription="Send SMS" />
+                android:text="Dinner"
+                android:textSize="12sp" />
+
         </LinearLayout>
 
-        <!-- Scrollable Content Section -->
+        <!-- ScrollView to make content scrollable -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -77,7 +70,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Recipe Title -->
+                <!-- Title -->
                 <TextView
                     android:id="@+id/detailTitle"
                     android:layout_width="wrap_content"
@@ -86,7 +79,8 @@
                     android:layout_gravity="center_horizontal"
                     android:text="Recipe Title"
                     android:textSize="26sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
 
                 <!-- Ingredients -->
                 <TextView
@@ -99,7 +93,7 @@
                     android:textStyle="bold"
                     android:padding="8dp" />
 
-                <!-- Steps to Cook -->
+                <!-- Steps -->
                 <TextView
                     android:id="@+id/textStepsToCook"
                     android:layout_width="match_parent"
@@ -110,48 +104,19 @@
                     android:textStyle="bold"
                     android:padding="8dp" />
 
-                <!-- Purchased Checkbox -->
+                <!-- Checkbox for Purchased -->
                 <CheckBox
                     android:id="@+id/checkboxPurchased"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Purchased"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+
+                    />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
-    <!-- Floating Action Menu -->
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fabMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:menu_colorNormal="@color/navy"
-        app:menu_colorPressed="@color/cyan"
-        app:menu_fab_size="normal"
-        app:menu_icon="@drawable/baseline_format_list_bulleted_24"
-        app:menu_openDirection="up"
-        app:menu_showShadow="true">
-
-        <!-- Edit Button -->
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/editButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:fab_colorNormal="@color/green"
-            app:fab_size="mini" />
-
-        <!-- Delete Button -->
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_delete_24"
-            app:fab_colorNormal="@color/red"
-            app:fab_size="mini" />
-    </com.github.clans.fab.FloatingActionMenu>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,7 +1,10 @@
 package com.example.mealmate.Fragments;
 
 import android.annotation.SuppressLint;
-import android.content.res.Configuration;
+import android.content.DialogInterface;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -10,20 +13,24 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
-import com.example.mealmate.adapter.MyAdapter;
+import com.example.mealmate.Repository.SpoonacularRecipeModel;
+import com.example.mealmate.adapter.RecipeAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -35,8 +42,8 @@ public class MyRecipeFragment extends Fragment {
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
-    List<Recipe> dataList;
-    MyAdapter adapter;
+    List<SpoonacularRecipeModel> dataList;
+    RecipeAdapter adapter;
     SearchView searchView;
     ProgressBar progressBar;
     private final Handler searchHandler = new Handler();
@@ -54,14 +61,16 @@ public class MyRecipeFragment extends Fragment {
 
         searchView.clearFocus();
 
-        // Set up GridLayoutManager with dynamic columns
-        int numberOfColumns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1;
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
+        // Set up GridLayoutManager with dynamic columns based on screen width
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int columnWidth = getResources().getDimensionPixelSize(R.dimen.grid_column_width); // Define this in dimens.xml
+        int spanCount = Math.max(1, screenWidth / columnWidth);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), spanCount);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // Set up adapter
         dataList = new ArrayList<>();
-        adapter = new MyAdapter(getContext(), dataList);
+        adapter = new RecipeAdapter(getContext(), dataList);
         recyclerView.setAdapter(adapter);
 
         // Set up Firebase Database reference
@@ -86,7 +95,7 @@ public class MyRecipeFragment extends Fragment {
             }
         });
 
-        // Search functionality
+        // Search functionality with a delay
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -95,21 +104,60 @@ public class MyRecipeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchHandler.removeCallbacksAndMessages(null); // Remove pending search callbacks
-                searchHandler.postDelayed(() -> searchList(newText), 300); // Delay search by 300ms
+                searchHandler.removeCallbacksAndMessages(null);
+                searchHandler.postDelayed(() -> searchList(newText), 300);
                 return true;
             }
         });
 
         // FAB click listener to open add recipe fragment
         fab.setOnClickListener(view1 -> {
-            Fragment addRecipeFragment = new addRecipeFragment();
+            Fragment addRecipeFragment = new AddRecipeFragment();
             FragmentManager fragmentManager = getParentFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, addRecipeFragment)
                     .addToBackStack(null)
                     .commit();
         });
+
+        // Attach ItemTouchHelper for swipe gestures with visual indication
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                SpoonacularRecipeModel recipe = dataList.get(position);
+
+                // Show AlertDialog to confirm deletion
+                showDeleteConfirmationDialog(recipe, position);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+                // Create a Paint object for the swipe background color
+                Paint paint = new Paint();
+                if (dX > 0) {
+                    // Swipe to the right: set a green color
+                    paint.setColor(Color.parseColor("#4CAF50"));
+                } else if (dX < 0) {
+                    // Swipe to the left: set a red color
+                    paint.setColor(Color.parseColor("#F44336"));
+                }
+
+                // Draw the background color on the item being swiped
+                c.drawRect(viewHolder.itemView.getLeft(), viewHolder.itemView.getTop(),
+                        viewHolder.itemView.getRight(), viewHolder.itemView.getBottom(), paint);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return view;
     }
@@ -122,6 +170,7 @@ public class MyRecipeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void updateDataList(DataSnapshot snapshot) {
         dataList.clear();
         for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
@@ -134,14 +183,49 @@ public class MyRecipeFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    // Search for recipes by title
+    // Firebase query for search functionality
     public void searchList(String text) {
-        ArrayList<Recipe> searchList = new ArrayList<>();
-        for (Recipe recipe : dataList) {
-            if (recipe.getDataTitle().toLowerCase().contains(text.toLowerCase())) {
-                searchList.add(recipe);
+        Query query = databaseReference.orderByChild("title").startAt(text).endAt(text + "\uf8ff");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                updateDataList(snapshot);
             }
-        }
-        adapter.searchDataList(searchList);
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(getContext(), "Error fetching data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Method to delete recipe from Firebase
+    private void deleteRecipeFromFirebase(String recipeKey) {
+        DatabaseReference recipeRef = databaseReference.child(recipeKey);
+        recipeRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully deleted
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to delete recipe", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    // Show confirmation dialog before deleting the recipe
+    private void showDeleteConfirmationDialog(SpoonacularRecipeModel recipe, int position) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Recipe")
+                .setMessage("Are you sure you want to delete this recipe?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Proceed to delete the recipe if confirmed
+                    deleteRecipeFromFirebase(recipe.getKey());
+                    Toast.makeText(getContext(), "Recipe deleted", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // Restore the item in the adapter (revert swipe)
+                    adapter.notifyItemChanged(position);
+                })
+                .setCancelable(false)  // Prevent dialog dismissal by tapping outside
+                .show();
     }
 }

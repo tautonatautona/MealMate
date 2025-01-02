@@ -18,4 +18,6 @@
     <string name="update">Update</string>
     <string name="add_recipe1">Add Recipe</string>
     <string name="add_recipe_">Add Recipe</string>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
 </resources>

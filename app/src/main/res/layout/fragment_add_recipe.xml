@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragments.addRecipeFragment">
+    tools:context=".Fragments.AddRecipeFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -41,27 +41,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:autofillHints=""
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/edittext_background"
                 android:layout_marginTop="20dp"
                 android:inputType="text"
                 android:padding="16dp"
                 android:hint="@string/enter_recipe_name"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/lavender"
-                />
-
-            <EditText
-                android:id="@+id/uploadDesc"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:autofillHints=""
-                android:background="@drawable/lavender_border"
-                android:layout_marginTop="20dp"
-                android:inputType="text"
-                android:padding="16dp"
-                android:hint="@string/enter_recipe_description"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/lavender"
                 />
 
             <EditText
@@ -69,24 +54,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:autofillHints=""
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/edittext_background"
                 android:layout_marginTop="20dp"
                 android:inputType="text"
                 android:padding="16dp"
-                android:hint="@string/enter_recipe_description"
+                android:hint="Enter ingredients"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/lavender"
+
                 />
 
-            <Button
+            <EditText
+                android:id="@+id/uploadInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:autofillHints=""
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                android:padding="16dp"
+                android:hint="Enter instructions"
+                android:gravity="start|center_vertical"
+
+                />
+
+
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/saveButton"
+                style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="@string/save"
-                android:textSize="18sp"
-                android:layout_marginTop="20dp"
-                app:cornerRadius = "20dp"
-                />
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="@drawable/button_background"
+                android:text="save"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

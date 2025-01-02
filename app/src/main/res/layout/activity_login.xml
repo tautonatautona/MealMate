@@ -98,7 +98,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/forgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't Remember Password?"
@@ -108,15 +107,15 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/resetPassword"
+                android:id="@+id/forgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
                 android:contentDescription="@string/reset_password_description"
                 android:text="Recover It"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textColor="#FF5722"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -129,7 +128,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/createAccount"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account?"
@@ -139,14 +138,14 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/createAccountLink"
+                android:id="@+id/createAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="Create Account"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textColor="#FF5722"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -208,7 +207,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="Facebook"
-                android:textColor="@color/green"
+                android:textColor="#FF5722"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -240,7 +239,7 @@
                 android:layout_marginStart="-10dp"
                 android:layout_weight="1"
                 android:text="Google"
-                android:textColor="@color/green"
+                android:textColor="#FF5722"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -253,6 +252,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:background="@drawable/button_background"
             android:text="Login"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="25sp" />
 

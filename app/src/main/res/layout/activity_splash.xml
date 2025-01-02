@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".SplashActivity"
    >
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/splash_image" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"
@@ -28,7 +37,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="MealMate"
-        android:textColor="@color/black"
+        android:textColor="#FF5722"
         android:textSize="70dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

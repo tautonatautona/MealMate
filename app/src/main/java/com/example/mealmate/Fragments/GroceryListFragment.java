@@ -9,17 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mealmate.Model.Recipe;
 import com.example.mealmate.R;
-import com.example.mealmate.adapter.MyAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.mealmate.Repository.SpoonacularRecipeModel;  // Import RecipeBean
+import com.example.mealmate.adapter.RecipeAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,24 +31,23 @@ import java.util.List;
 
 public class GroceryListFragment extends Fragment {
 
-    DatabaseReference databaseReference;
-    ValueEventListener eventListener;
-    RecyclerView recyclerView;
-    List<Recipe> dataList;
-    MyAdapter adapter;
-    SearchView searchView;
-    ProgressBar progressBar;
+    private DatabaseReference databaseReference;
+    private ValueEventListener eventListener;
+    private List<SpoonacularRecipeModel> dataList;  // Use RecipeBean
+    private RecipeAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView noResultsTextView;  // TextView to show "No Results"
     private final Handler searchHandler = new Handler();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_list, container, false);
 
         // Initialize views
-        recyclerView = view.findViewById(R.id.recyclerView);
-        searchView = view.findViewById(R.id.search);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        SearchView searchView = view.findViewById(R.id.search);
         progressBar = view.findViewById(R.id.progressBar);
+        noResultsTextView = view.findViewById(R.id.noResultsTextView);  // Initialize "No Results" TextView
 
         searchView.clearFocus();
 
@@ -57,12 +56,12 @@ public class GroceryListFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        // Set up adapter
+        // Initialize data list and adapter
         dataList = new ArrayList<>();
-        adapter = new MyAdapter(getContext(), dataList);
+        adapter = new RecipeAdapter(getContext(), dataList);
         recyclerView.setAdapter(adapter);
 
-        // Set up Firebase Database reference
+        // Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("mealmate_recipes_groceryList");
 
         // Show ProgressBar
@@ -72,15 +71,17 @@ public class GroceryListFragment extends Fragment {
         eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 updateDataList(snapshot);
                 progressBar.setVisibility(View.GONE); // Hide ProgressBar after data is loaded
+                noResultsTextView.setVisibility(dataList.isEmpty() ? View.VISIBLE : View.GONE);  // Show "No Results" if dataList is empty
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 progressBar.setVisibility(View.GONE); // Hide ProgressBar on error
                 Toast.makeText(getContext(), "Error fetching data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                retryDataFetch();  // Retry after a delay
             }
         });
 
@@ -110,26 +111,38 @@ public class GroceryListFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void updateDataList(DataSnapshot snapshot) {
         dataList.clear();
         for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-            Recipe recipe = itemSnapshot.getValue(Recipe.class);
+            SpoonacularRecipeModel recipe = itemSnapshot.getValue(SpoonacularRecipeModel.class);  // Get RecipeBean
             if (recipe != null) {
-                recipe.setKey(itemSnapshot.getKey());
+                recipe.setKey(itemSnapshot.getKey());  // Set the Firebase key
                 dataList.add(recipe);
             }
         }
         adapter.notifyDataSetChanged();
     }
 
-    // Search for recipes by title
+    // Search for recipes by title or ingredients
     public void searchList(String text) {
-        ArrayList<Recipe> searchList = new ArrayList<>();
-        for (Recipe recipe : dataList) {
-            if (recipe.getDataTitle().toLowerCase().contains(text.toLowerCase())) {
+        ArrayList<SpoonacularRecipeModel> searchList = new ArrayList<>();
+        for (SpoonacularRecipeModel recipe : dataList) {
+            if (recipe.getTitle().toLowerCase().contains(text.toLowerCase()) ||
+                    recipe.getIngredients().contains(text.toLowerCase())) {  // Check ingredients as well
                 searchList.add(recipe);
             }
         }
-        adapter.searchDataList(searchList);
+        adapter.searchDataList(searchList);  // Update adapter with search results
+        noResultsTextView.setVisibility(searchList.isEmpty() ? View.VISIBLE : View.GONE);  // Show "No Results" if search returns empty
+    }
+
+    // Retry fetching data from Firebase
+    private void retryDataFetch() {
+        Toast.makeText(getContext(), "Retrying...", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            databaseReference.addValueEventListener(eventListener);  // Retry fetching data
+        }, 3000);  // Retry after 3 seconds
     }
 }

@@ -1,8 +1,6 @@
 package com.example.mealmate;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +17,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.mealmate.Utils.ImageUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -47,7 +44,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.imageView3);
         TextView signIn = findViewById(R.id.signIn);
-        ImageUtils.setBlurredImage(this, imageView, R.drawable.splash_image);
         EditText editTextName = findViewById(R.id.editTextPersonName);
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextPassword = findViewById(R.id.editTextPassword);

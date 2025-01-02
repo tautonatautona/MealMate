@@ -16,7 +16,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.mealmate.Utils.ImageUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -67,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         ImageView imageView = findViewById(R.id.imageView3);
-        ImageUtils.setBlurredImage(this, imageView, R.drawable.splash_image); // Replace with your image resource
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextPassword = findViewById(R.id.editTextPassword);
         TextView textViewForgotPassword = findViewById(R.id.forgotPassword);
