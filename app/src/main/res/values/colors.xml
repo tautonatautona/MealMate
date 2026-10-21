@@ -37,4 +37,47 @@
     <color name="lavender">#8692f7</color>
     <color name="green">#00ff00</color>
     <color name="red">#c70000</color>
+
+    <!-- MealMate brand palette (Material 3 roles, light) -->
+    <color name="md_primary">#B53A0F</color>
+    <color name="md_onPrimary">#FFFFFF</color>
+    <color name="md_primaryContainer">#FFDBCF</color>
+    <color name="md_onPrimaryContainer">#3A0B00</color>
+    <color name="md_secondary">#77574C</color>
+    <color name="md_onSecondary">#FFFFFF</color>
+    <color name="md_secondaryContainer">#FFDBCF</color>
+    <color name="md_onSecondaryContainer">#2C160E</color>
+    <color name="md_tertiary">#4F6628</color>
+    <color name="md_onTertiary">#FFFFFF</color>
+    <color name="md_tertiaryContainer">#D0EDA0</color>
+    <color name="md_onTertiaryContainer">#121F00</color>
+    <color name="md_error">#BA1A1A</color>
+    <color name="md_onError">#FFFFFF</color>
+    <color name="md_errorContainer">#FFDAD6</color>
+    <color name="md_onErrorContainer">#410002</color>
+    <color name="md_surface">#FFF8F6</color>
+    <color name="md_onSurface">#231915</color>
+    <color name="md_onSurfaceVariant">#53433E</color>
+    <color name="md_surfaceVariant">#F5DED6</color>
+    <color name="md_surfaceContainerLowest">#FFFFFF</color>
+    <color name="md_surfaceContainerLow">#FFF1EC</color>
+    <color name="md_surfaceContainer">#FCEAE4</color>
+    <color name="md_surfaceContainerHigh">#F6E4DE</color>
+    <color name="md_surfaceContainerHighest">#F1DFD8</color>
+    <color name="md_outline">#85736D</color>
+    <color name="md_outlineVariant">#D8C2BA</color>
+
+    <!-- Fixed colours for text and scrims drawn over food photography -->
+    <color name="on_image">#FFFFFF</color>
+    <color name="on_image_muted">#D9FFFFFF</color>
+    <color name="scrim_start">#00000000</color>
+    <color name="scrim_mid">#80000000</color>
+    <color name="scrim_end">#E6000000</color>
+    <color name="photo_backdrop">#0F0A08</color>
+
+    <!-- Fixed action colours (white icons on top, same in light and dark) -->
+    <color name="action_primary">#C2410C</color>
+    <color name="action_primary_pressed">#9A3412</color>
+    <color name="action_edit">#4F6628</color>
+    <color name="action_delete">#BA1A1A</color>
 </resources>

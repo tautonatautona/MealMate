@@ -7,151 +7,142 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.HomePageFragment">
 
-    <!-- Content Layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Search View -->
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search"
+            style="@style/Widget.MealMate.SearchView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/edittext_background"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_search"
             app:closeIcon="@drawable/baseline_clear_24"
             app:iconifiedByDefault="false"
-            app:queryHint="Search..."
+            app:queryHint="@string/search_recipes"
             app:searchHintIcon="@null"
-            app:searchIcon="@drawable/ic_baseline_search_24"
-            />
+            app:searchIcon="@drawable/ic_baseline_search_24" />
 
-        <!-- Scrollable Content -->
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingBottom="88dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Featured Section -->
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="Featured"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    />
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_centerInParent="true"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/section_featured"
+                        android:textAppearance="@style/TextAppearance.MealMate.SectionTitle" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:visibility="gone"
+                        app:indicatorSize="20dp"
+                        app:trackThickness="3dp" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/featuredRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:scrollbars="horizontal"
-                    />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <!-- Category Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-10dp"
-                    android:text="Category"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    />
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/section_categories"
+                    android:textAppearance="@style/TextAppearance.MealMate.SectionTitle" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnBreakfast"
+                        style="@style/Widget.MealMate.Button.Tonal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
+                        android:layout_marginHorizontal="4dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/lavender"
-                        android:text="Breakfast"
-                        android:textSize="12sp"
-                        />
+                        android:text="@string/category_breakfast" />
 
                     <Button
                         android:id="@+id/btnLunch"
+                        style="@style/Widget.MealMate.Button.Tonal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
+                        android:layout_marginHorizontal="4dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/lavender"
-                        android:text="Lunch"
-                        android:textSize="12sp"
-                        />
+                        android:text="@string/category_lunch" />
 
                     <Button
                         android:id="@+id/btnDinner"
+                        style="@style/Widget.MealMate.Button.Tonal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
+                        android:layout_marginHorizontal="4dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/lavender"
-                        android:text="Dinner"
-                        android:textSize="12sp"
-                        />
-
+                        android:text="@string/category_dinner" />
                 </LinearLayout>
 
-                <!-- Popular Recipes Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="Popular Recipes"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    />
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/section_popular"
+                    android:textAppearance="@style/TextAppearance.MealMate.SectionTitle" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="364dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:scrollbars="vertical"
-                    />
-
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingHorizontal="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
-    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:layout_marginBottom="70dp"
-        android:backgroundTint="@color/lavender"
         android:contentDescription="@string/add_recipe_"
-        android:src="@drawable/ic_baseline_add_24"
-        app:tint="@color/white"
-        />
-
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -20,4 +20,58 @@
     <string name="add_recipe_">Add Recipe</string>
     <string name="openDrawer">Open Drawer</string>
     <string name="closeDrawer">Close Drawer</string>
+
+    <!-- Splash / welcome -->
+    <string name="app_tagline">Plan meals. Shop smarter.</string>
+    <string name="welcome_title">Welcome to MealMate</string>
+    <string name="welcome_subtitle">Plan your week, save your favourite recipes and turn them into a grocery list in one tap.</string>
+    <string name="get_started">Get started</string>
+
+    <!-- Auth -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Log in to pick up where you left off</string>
+    <string name="signup_title">Create account</string>
+    <string name="signup_subtitle">It only takes a minute</string>
+    <string name="label_name">Name</string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_retype_password">Confirm password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="action_login">Log in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="or_continue_with">or continue with</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+    <string name="no_account">Don't have an account?</string>
+    <string name="create_account">Create account</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="sign_in">Sign in</string>
+
+    <!-- Main screens -->
+    <string name="search_recipes">Search recipes</string>
+    <string name="section_featured">Featured</string>
+    <string name="section_categories">Categories</string>
+    <string name="section_popular">Popular recipes</string>
+    <string name="category_breakfast">Breakfast</string>
+    <string name="category_lunch">Lunch</string>
+    <string name="category_dinner">Dinner</string>
+    <string name="no_results">No results found</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Recipe detail / editing -->
+    <string name="recipe_title_placeholder">Recipe title</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
+    <string name="purchased">Purchased</string>
+    <string name="add_to_favourites">Save to my recipes</string>
+    <string name="add_to_grocery_list">Add to grocery list</string>
+    <string name="send_sms">Send by SMS</string>
+    <string name="edit_recipe">Edit recipe</string>
+    <string name="delete_recipe">Delete recipe</string>
+    <string name="recipe_actions">Recipe actions</string>
+    <string name="new_recipe">New recipe</string>
+    <string name="choose_photo">Tap to choose a photo</string>
+    <string name="recipe_name">Recipe name</string>
+    <string name="ingredients_hint">One ingredient per line</string>
 </resources>

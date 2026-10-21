@@ -1,157 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     tools:context=".Fragments.RecipeDetailFragment">
 
-    <!-- Top Image Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/detailImage"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/uploadimg"
-            android:elevation="4dp"
-            android:background="@drawable/rounded_corner_background" />
-    </LinearLayout>
-
-    <!-- Recipe Details Section -->
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="-22dp"
-        android:background="@drawable/rounded_back">
+        android:fillViewport="true">
 
-        <!-- Bookmark, Shop, and SMS Options -->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/addToMyRecipes"
-                android:layout_width="40dp"
-                android:layout_height="60dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:src="@drawable/bookmark_24px"
-                android:contentDescription="Add to Favorites" />
+                android:id="@+id/detailImage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="?attr/colorSurfaceContainerHighest"
+                android:contentDescription="@string/recipe_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/uploadimg" />
 
-            <ImageView
-                android:id="@+id/addToGroceryList"
-                android:layout_width="40dp"
-                android:layout_height="60dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:src="@drawable/shopping_basket"
-                android:contentDescription="Add to Grocery List" />
-
-            <ImageView
-                android:id="@+id/sendSms"
-                android:layout_width="40dp"
-                android:layout_height="60dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:src="@drawable/send"
-                android:contentDescription="Send SMS" />
-        </LinearLayout>
-
-        <!-- Scrollable Content Section -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-
-            <LinearLayout
+            <!-- Content sheet overlapping the bottom of the photo -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginTop="268dp"
+                android:minHeight="400dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardElevation="0dp"
+                app:shapeAppearance="@style/ShapeAppearance.MealMate.Sheet"
+                app:strokeWidth="0dp">
 
-                <!-- Recipe Title -->
-                <TextView
-                    android:id="@+id/detailTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Recipe Title"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-                <!-- Ingredients -->
-                <TextView
-                    android:id="@+id/textViewIngredients"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Ingredients:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:padding="8dp" />
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="96dp">
 
-                <!-- Steps to Cook -->
-                <TextView
-                    android:id="@+id/textStepsToCook"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Steps to cook the recipe:"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:padding="8dp" />
+                    <TextView
+                        android:id="@+id/detailTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recipe_title_placeholder"
+                        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold" />
 
-                <!-- Purchased Checkbox -->
-                <CheckBox
-                    android:id="@+id/checkboxPurchased"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Purchased"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
 
-    <!-- Floating Action Menu -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/addToMyRecipes"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_action_circle"
+                            android:clickable="true"
+                            android:contentDescription="@string/add_to_favourites"
+                            android:focusable="true"
+                            android:padding="16dp"
+                            android:src="@drawable/bookmark_24px"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="@string/add_to_favourites"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/addToGroceryList"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_action_circle"
+                            android:clickable="true"
+                            android:contentDescription="@string/add_to_grocery_list"
+                            android:focusable="true"
+                            android:padding="16dp"
+                            android:src="@drawable/shopping_basket"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="@string/add_to_grocery_list"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/sendSms"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/bg_action_circle"
+                            android:clickable="true"
+                            android:contentDescription="@string/send_sms"
+                            android:focusable="true"
+                            android:padding="16dp"
+                            android:src="@drawable/send"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center"
+                            android:text="@string/send_sms"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/ingredients"
+                        android:textAppearance="@style/TextAppearance.MealMate.SectionTitle" />
+
+                    <TextView
+                        android:id="@+id/textViewIngredients"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textIsSelectable="true" />
+
+                    <CheckBox
+                        android:id="@+id/checkboxPurchased"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/purchased"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/instructions"
+                        android:textAppearance="@style/TextAppearance.MealMate.SectionTitle" />
+
+                    <TextView
+                        android:id="@+id/textStepsToCook"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textIsSelectable="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:menu_colorNormal="@color/navy"
-        app:menu_colorPressed="@color/cyan"
+        android:contentDescription="@string/recipe_actions"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        app:menu_colorNormal="@color/action_primary"
+        app:menu_colorPressed="@color/action_primary_pressed"
         app:menu_fab_size="normal"
         app:menu_icon="@drawable/baseline_format_list_bulleted_24"
         app:menu_openDirection="up"
         app:menu_showShadow="true">
 
-        <!-- Edit Button -->
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/editButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/edit_recipe"
             android:src="@drawable/ic_baseline_edit_24"
-            app:fab_colorNormal="@color/green"
+            android:tint="@color/white"
+            app:fab_colorNormal="@color/action_edit"
+            app:fab_label="@string/edit_recipe"
             app:fab_size="mini" />
 
-        <!-- Delete Button -->
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/delete_recipe"
             android:src="@drawable/ic_baseline_delete_24"
-            app:fab_colorNormal="@color/red"
+            android:tint="@color/white"
+            app:fab_colorNormal="@color/action_delete"
+            app:fab_label="@string/delete_recipe"
             app:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

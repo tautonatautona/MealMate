@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MealMate brand palette (Material 3 roles, dark) -->
+    <color name="md_primary">#FFB59D</color>
+    <color name="md_onPrimary">#5E1700</color>
+    <color name="md_primaryContainer">#852400</color>
+    <color name="md_onPrimaryContainer">#FFDBCF</color>
+    <color name="md_secondary">#E7BDB0</color>
+    <color name="md_onSecondary">#442A21</color>
+    <color name="md_secondaryContainer">#5D4036</color>
+    <color name="md_onSecondaryContainer">#FFDBCF</color>
+    <color name="md_tertiary">#B4D186</color>
+    <color name="md_onTertiary">#233600</color>
+    <color name="md_tertiaryContainer">#384E12</color>
+    <color name="md_onTertiaryContainer">#D0EDA0</color>
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_onError">#690005</color>
+    <color name="md_errorContainer">#93000A</color>
+    <color name="md_onErrorContainer">#FFDAD6</color>
+    <color name="md_surface">#1A110E</color>
+    <color name="md_onSurface">#F1DFD8</color>
+    <color name="md_onSurfaceVariant">#D8C2BA</color>
+    <color name="md_surfaceVariant">#53433E</color>
+    <color name="md_surfaceContainerLowest">#140C09</color>
+    <color name="md_surfaceContainerLow">#231915</color>
+    <color name="md_surfaceContainer">#271D19</color>
+    <color name="md_surfaceContainerHigh">#322824</color>
+    <color name="md_surfaceContainerHighest">#3D322E</color>
+    <color name="md_outline">#A08C85</color>
+    <color name="md_outlineVariant">#53433E</color>
+</resources>

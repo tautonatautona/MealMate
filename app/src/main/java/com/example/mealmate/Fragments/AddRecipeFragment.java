@@ -148,7 +148,7 @@ public class AddRecipeFragment extends Fragment {
 
     private List<String> parseIngredients(String input) {
         Set<String> ingredientsSet = new HashSet<>();
-        String[] ingredientArray = input.split(";");
+        String[] ingredientArray = input.split("[;\n]"); // one per line or semicolon-separated
         for (String item : ingredientArray) {
             if (!item.trim().isEmpty()) {
                 ingredientsSet.add(item.trim());

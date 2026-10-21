@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Even darkening across a full-screen photo behind forms. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="270"
+        android:centerColor="@color/scrim_mid"
+        android:endColor="@color/scrim_end"
+        android:startColor="@color/scrim_mid" />
+</shape>

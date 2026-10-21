@@ -232,9 +232,12 @@ public class UpdateRecipeFragment extends Fragment {
         List<String> ingredientList = new ArrayList<>();
         if (input.isEmpty()) return ingredientList;
 
-        String[] ingredientLines = input.split("\n");
+        // Accept one ingredient per line or semicolon-separated, matching AddRecipeFragment
+        String[] ingredientLines = input.split("[;\n]");
         for (String line : ingredientLines) {
-            ingredientList.add(line.trim()); // Add each ingredient as a string
+            if (!line.trim().isEmpty()) {
+                ingredientList.add(line.trim());
+            }
         }
         return ingredientList;
     }
