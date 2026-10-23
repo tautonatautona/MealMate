@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "BAC VTLC Homepage",
+    "id": "eadcbe5f-f226-4296-84db-9e23b3e6f60b",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "BAC Virtual Teaching & Learning Centre (VTLC) homepage web part"
+      },
+      "longDescription": {
+        "default": "BAC Virtual Teaching & Learning Centre (VTLC) homepage web part"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "vtlc-sharepoint Feature",
+        "description": "The feature that activates elements of the vtlc-sharepoint solution.",
+        "id": "82303afc-af48-4c3a-929f-5345f35c0f36",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/vtlc-sharepoint.sppkg"
+  }
+}

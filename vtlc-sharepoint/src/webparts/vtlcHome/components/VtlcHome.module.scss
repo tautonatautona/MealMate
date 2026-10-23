@@ -1,0 +1,767 @@
+// Tokens taken from the Figma "HI-FI REFINED · Homepage" frame.
+$navy: #102d4a;
+$ink: #173754;
+$hero: #174f7b;
+$hero-pill: #29628b;
+$hero-ring: #216994;
+$hero-lead: #dfeef7;
+$primary: #17699e;
+$teal: #0f8f86;
+$amber: #e3aa50;
+$muted: #5c7589;
+$nav-text: #3f5b72;
+$border: #dce6ef;
+$page-bg: #f4f7fb;
+$tint-blue: #e9f4fb;
+$tint-teal: #e7f6f0;
+$tag-bg: #f7fafc;
+$white: #ffffff;
+
+$font: 'Inter', 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+$gutter: 48px;
+$tablet: 1024px;
+$mobile: 640px;
+
+@mixin reset-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+}
+
+.vtlcHome {
+  font-family: $font;
+  color: $ink;
+  background: $page-bg;
+  -webkit-font-smoothing: antialiased;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  // Zero-specificity reset so the component classes below can set their own spacing.
+  :where(h1, h2, h3, p) {
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    @include focus-ring;
+  }
+}
+
+.page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 35px $gutter 36px;
+
+  @media (max-width: $tablet) {
+    padding: 24px 24px 32px;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 16px 16px 24px;
+  }
+}
+
+// ---------------------------------------------------------------- site header
+
+.siteHeader {
+  background: $white;
+  border-bottom: 1px solid $border;
+}
+
+.brandBar {
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: 105px;
+  padding: 0 $gutter 0 47px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  @media (max-width: $tablet) {
+    padding: 16px 24px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 16px;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+}
+
+.logo {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: $hero;
+  color: $white;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.siteTitle {
+  color: $ink;
+  font-size: 25px;
+  line-height: 36px;
+  font-weight: 700;
+
+  @media (max-width: $mobile) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+.siteSubtitle {
+  color: $muted;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: pre-wrap;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nav {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 $gutter 0 49px;
+  overflow-x: auto;
+
+  @media (max-width: $tablet) {
+    padding: 0 24px;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 0 16px;
+  }
+
+  ul {
+    @include reset-list;
+    display: flex;
+    gap: 40px;
+    min-height: 53px;
+    align-items: center;
+
+    @media (max-width: $tablet) {
+      gap: 24px;
+    }
+  }
+
+  a {
+    display: block;
+    padding: 4px 0;
+    color: $nav-text;
+    font-size: 13px;
+    line-height: 19px;
+    font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      color: $primary;
+      border-bottom-color: $primary;
+    }
+  }
+}
+
+// ---------------------------------------------------------------- buttons
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  height: 43px;
+  padding: 0 18px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 600;
+  white-space: pre;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.buttonPrimary {
+  background: $primary;
+  color: $white;
+
+  &:hover {
+    background: darken($primary, 6%);
+    color: $white;
+  }
+}
+
+.buttonSecondary {
+  background: $white;
+  border: 1px solid $border;
+  color: $primary;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary;
+  }
+}
+
+// Hero buttons are fixed-width in the design (191px / 176px).
+.buttonWide {
+  min-width: 176px;
+
+  &.buttonSecondary {
+    min-width: 191px;
+  }
+}
+
+// ---------------------------------------------------------------- hero
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 316px;
+  padding: 39px 88px 19px 31px;
+  border-radius: 16px;
+  background: $hero;
+  color: $white;
+
+  @media (max-width: $tablet) {
+    flex-direction: column;
+    padding: 32px 24px;
+  }
+}
+
+.heroRingOuter,
+.heroRingInner {
+  position: absolute;
+  border-radius: 50%;
+  background: $hero-ring;
+  pointer-events: none;
+}
+
+.heroRingOuter {
+  top: 24px;
+  right: 52px;
+  width: 230px;
+  height: 230px;
+}
+
+.heroRingInner {
+  top: 90px;
+  right: 88px;
+  width: 122px;
+  height: 122px;
+}
+
+.heroContent {
+  position: relative;
+  min-width: 0;
+  max-width: 805px;
+}
+
+.heroEyebrow {
+  display: inline-block;
+  min-width: 168px;
+  padding: 6px 12px 7px;
+  border-radius: 14px;
+  background: $hero-pill;
+  color: $white;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin-top: 17px;
+  color: $white;
+  font-size: 39px;
+  line-height: 56px;
+  font-weight: 700;
+
+  span {
+    display: block;
+  }
+
+  @media (max-width: $mobile) {
+    font-size: 30px;
+    line-height: 40px;
+  }
+}
+
+.heroLead {
+  margin-top: 15px;
+  color: $hero-lead;
+  font-size: 16px;
+  line-height: 23px;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.highlights {
+  position: relative;
+  flex: none;
+  width: 346px;
+  margin-top: 7px;
+  padding: 15px 19px 18px;
+  border: 1px solid $border;
+  border-radius: 12px;
+  background: $white;
+  color: $ink;
+
+  @media (max-width: $tablet) {
+    margin-top: 0;
+  }
+
+  @media (max-width: $mobile) {
+    width: 100%;
+  }
+}
+
+.pill {
+  display: inline-block;
+  min-width: 162px;
+  padding: 6px 12px 7px;
+  border-radius: 14px;
+  background: $tint-blue;
+  color: $primary;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.highlightsTitle {
+  margin-top: 16px;
+  color: $ink;
+  font-size: 19px;
+  line-height: 27px;
+  font-weight: 700;
+}
+
+.highlightsTagline {
+  margin-top: 5px;
+  color: $muted;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.divider {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: $border;
+}
+
+.highlights .divider {
+  margin-top: 9px;
+}
+
+.highlightsList {
+  @include reset-list;
+  margin-top: 15px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-left: 2px;
+    font-size: 11px;
+    line-height: 18px;
+    color: $ink;
+  }
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotTeal { background: $teal; }
+.dotBlue { background: $primary; }
+.dotAmber { background: $amber; }
+
+// ---------------------------------------------------------------- sections
+
+.section {
+  margin-top: 39px;
+}
+
+.sectionHeading {
+  margin-bottom: 10px;
+
+  h2 {
+    color: $ink;
+    font-size: 22px;
+    line-height: 31px;
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: 5px;
+    color: $muted;
+    font-size: 13px;
+    line-height: 19px;
+  }
+}
+
+.card {
+  display: block;
+  border: 1px solid $border;
+  border-radius: 12px;
+  background: $white;
+  color: $ink;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.card:hover {
+  border-color: $primary;
+  box-shadow: 0 4px 16px rgba($navy, 0.08);
+  color: $ink;
+}
+
+.accentBlue {
+  --vtlc-accent: #{$primary};
+  --vtlc-tint: #{$tint-blue};
+}
+
+.accentTeal {
+  --vtlc-accent: #{$teal};
+  --vtlc-tint: #{$tint-teal};
+}
+
+.iconTile {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: var(--vtlc-tint, $tint-blue);
+  color: var(--vtlc-accent, $primary);
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 700;
+}
+
+// What would you like to do?
+.quickGrid {
+  @include reset-list;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: $mobile) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
+.quickCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 155px;
+  padding: 17px 17px 12px;
+
+  .iconTile {
+    margin-bottom: 13px;
+  }
+}
+
+.quickTitle {
+  font-size: 16px;
+  line-height: 23px;
+  font-weight: 600;
+  color: $ink;
+}
+
+.quickDescription {
+  margin-top: 6px;
+  color: $muted;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.quickLink {
+  margin-top: auto;
+  padding-top: 9px;
+  color: var(--vtlc-accent, $primary);
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 600;
+  white-space: pre;
+}
+
+// Featured resources
+.featuredLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 840fr) minmax(0, 476fr);
+  gap: 28px;
+  align-items: start;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+
+.resourceList {
+  @include reset-list;
+  display: grid;
+  gap: 22px;
+
+  @media (max-width: $mobile) {
+    gap: 16px;
+  }
+}
+
+.resource {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 91px;
+  padding: 12px 21px 12px 15px;
+
+  @media (max-width: $mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+.resourceBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resourceTitle {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 600;
+  color: $ink;
+}
+
+.resourceMeta {
+  margin-top: 5px;
+  color: $muted;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.resourceNote {
+  margin-top: 8px;
+  color: $muted;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.tag {
+  flex: none;
+  min-width: 143px;
+  padding: 6px 12px 7px;
+  border-radius: 14px;
+  background: $tag-bg;
+  color: $primary;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+
+  @media (max-width: $mobile) {
+    min-width: 0;
+    margin-left: 58px;
+  }
+}
+
+.aside {
+  padding: 19px 19px 3px;
+
+  .divider {
+    margin-top: 5px;
+  }
+}
+
+.asideTitle {
+  color: $ink;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.asideList {
+  @include reset-list;
+  padding: 24px 0 23px;
+  display: grid;
+  gap: 25px;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &:hover .asideItemTitle {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+}
+
+.asideItemTitle {
+  color: $ink;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 600;
+}
+
+.asideItemDescription {
+  color: $muted;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.asideButton {
+  min-width: 213px;
+  margin-bottom: 16px;
+}
+
+// Explore our support units
+.unitsSection {
+  margin-top: 75px;
+
+  @media (max-width: $tablet) {
+    margin-top: 48px;
+  }
+}
+
+.unitGrid {
+  @include reset-list;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 315px));
+  gap: 19px 23px;
+
+  @media (max-width: $tablet) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: $mobile) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+.unit {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 56px;
+  padding: 0 16px 0 17px;
+  border: 1px solid $border;
+  border-radius: 8px;
+  background: $white;
+  color: $ink;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 600;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: $primary;
+    color: $ink;
+  }
+}
+
+.unitDot {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--vtlc-accent, $primary);
+}
+
+// ---------------------------------------------------------------- footer
+
+.footer {
+  margin-top: 106px;
+  padding-top: 24px;
+  border-top: 1px solid $border;
+
+  @media (max-width: $tablet) {
+    margin-top: 56px;
+  }
+}
+
+.footerTitle {
+  padding-left: 2px;
+  color: $ink;
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: pre-wrap;
+}
+
+.footerLinks {
+  @include reset-list;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  margin-top: 8px;
+  padding-left: 2px;
+
+  a {
+    color: $muted;
+    font-size: 12px;
+    line-height: 17px;
+
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+}

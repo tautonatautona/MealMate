@@ -1,0 +1,23 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "vtlc-sharepoint",
+    "environment": "spo",
+    "packageManager": "npm",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "useGulp": false,
+    "componentType": "webpart",
+    "template": "react",
+    "componentName": "VtlcHome",
+    "componentDescription": "BAC Virtual Teaching and Learning Centre homepage",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.22.0",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "vtlc-sharepoint",
+    "libraryId": "eadcbe5f-f226-4296-84db-9e23b3e6f60b",
+    "solutionShortDescription": "vtlc-sharepoint description"
+  }
+}
